@@ -1,0 +1,59 @@
+initialize() {
+
+initializeTreeSeq();
+ initializeMutationRate(0);
+ initializeMutationType("m1", 0.5, "f", 0.0);
+ initializeGenomicElementType("g1", m1, 1.0);
+ initializeGenomicElement(g1, 0, 1e7-1);
+initializeRecombinationRate(1e-8);
+
+}
+
+1 late() {
+
+	sim.readFromPopulationFile("msprime_coal.trees");
+	
+	sim.addSubpopSplit("p1", 100, p0);
+	sim.addSubpopSplit("p2", 100, p0);
+	sim.addSubpopSplit("p3", 100, p0);
+	sim.addSubpopSplit("p4", 100, p0);
+	sim.addSubpopSplit("p5", 100, p0);
+	sim.addSubpopSplit("p6", 100, p0);
+	sim.addSubpopSplit("p7", 100, p0);
+	sim.addSubpopSplit("p8", 100, p0);
+	sim.addSubpopSplit("p9", 100, p0);
+	sim.addSubpopSplit("p10", 1000, p0);
+	p0.setSubpopulationSize(100);
+	p0.setMigrationRates(p1, 0.1);
+	p1.setMigrationRates(c(p0, p2), c(0.1, 0.1));
+	p2.setMigrationRates(c(p1, p3), c(0.1, 0.1));
+	p3.setMigrationRates(c(p2, p4), c(0.1, 0.1));
+	p4.setMigrationRates(c(p3, p5), c(0.1, 0.1));
+	p5.setMigrationRates(c(p4, p6), c(0.1, 0.1));
+	p6.setMigrationRates(c(p5, p7), c(0.1, 0.1));
+	p7.setMigrationRates(c(p6, p8), c(0.1, 0.1));
+	p8.setMigrationRates(c(p7, p9), c(0.1, 0.1));
+	p9.setMigrationRates(p8, 0.1);
+	}
+
+1: late(){
+    catn(sim.generation);}
+	
+50000 late() {
+	
+	p1.setSubpopulationSize(0);
+	p2.setSubpopulationSize(0);
+	p3.setSubpopulationSize(0);
+	p6.setSubpopulationSize(0);
+	p7.setSubpopulationSize(0);
+	p8.setSubpopulationSize(0);
+	p4.setMigrationRates(p5, 0);
+	p5.setMigrationRates(p4, 0);
+	p0.setSubpopulationSize(1000);
+	p4.setSubpopulationSize(1000);
+	p5.setSubpopulationSize(1000);
+	p9.setSubpopulationSize(1000);
+	}
+	
+100000 late() { sim.treeSeqOutput("mig1.trees");}
+
